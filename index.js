@@ -1,14 +1,24 @@
+const dotenv = require('dotenv')
 const express = require('express')
-const checkConnection = require('./util/database')
-const app = express()
-const port = 3000
+const checkConnection = require('./util/db')
 
+const app = express()
+
+// Read and parse .env file.
+dotenv.config()
+
+// Replace the following with values for your environment.
+const PORT = process.env.NODE_PORT
+const HOST = process.env.NODE_HOST
+
+// GET request to the home page
 app.get('/', (req, res) => {
-  res.send('Hi there!')
+  res.send('Home sweet home!')
 })
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`)
+// Binds and listens for connections on the specified port
+app.listen(PORT, () => {
+  console.log(`App listening at http://${HOST}:${PORT}`)
 })
 
 checkConnection()
