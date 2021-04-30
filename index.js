@@ -1,6 +1,6 @@
 const dotenv = require('dotenv')
 const express = require('express')
-const checkConnection = require('./util/db')
+const getInstance = require('./util/database')
 
 const app = express()
 
@@ -21,4 +21,5 @@ app.listen(PORT, () => {
   console.log(`App listening at http://${HOST}:${PORT}`)
 })
 
-checkConnection()
+// Get mongodb instance
+getInstance()
