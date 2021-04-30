@@ -1,6 +1,7 @@
 const dotenv = require('dotenv')
 const express = require('express')
-const getInstance = require('./util/database')
+const database = require('./src/util/database')
+const logger = require('pino')()
 
 const app = express()
 
@@ -13,13 +14,15 @@ const HOST = process.env.NODE_HOST
 
 // GET request to the home page
 app.get('/', (req, res) => {
-  res.send('Home sweet home!')
+    res.send('Home sweet home!')
 })
 
-// Binds and listens for connections on the specified port
-app.listen(PORT, () => {
-  console.log(`App listening at http://${HOST}:${PORT}`)
+// Database connection instance.
+database().then(() => {
+    // Binds and listens for connections on the specified port.
+    app.listen(PORT, () => {
+        logger.info({ "message": `App listening at http://${HOST}:${PORT}` })
+    })
+}).catch(error => {
+    logger.error({ "message": error })
 })
-
-// Get mongodb instance
-getInstance()
