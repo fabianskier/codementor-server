@@ -1,28 +1,31 @@
 const dotenv = require('dotenv')
 const express = require('express')
-const database = require('./src/util/database')
-const logger = require('pino')()
+
+const database = require('./src/utils/database')
+const userRoute = require('./src/routes/user.route')
 
 const app = express()
 
 // Read and parse .env file.
 dotenv.config()
 
-// Replace the following with values for your environment.
-const PORT = process.env.NODE_PORT
-const HOST = process.env.NODE_HOST
+const PORT = process.env.NODE_PORT || 3000
 
-// GET request to the home page
-app.get('/', (req, res) => {
-    res.send('Home sweet home!')
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+
+app.use('/api', userRoute)
+
+app.get('/', (req, res, next) => {
+    res.send('Home sweet home')
 })
 
-// Database connection instance.
-database().then(() => {
-    // Binds and listens for connections on the specified port.
+
+// Connect to the database
+database.then(
     app.listen(PORT, () => {
-        logger.info({ "message": `App listening at http://${HOST}:${PORT}` })
+        console.log(`Server: http://localhost:${PORT}`)
     })
-}).catch(error => {
-    logger.error({ "message": error })
+).catch(err => {
+    console.log(err)
 })
