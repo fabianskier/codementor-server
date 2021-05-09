@@ -23,9 +23,8 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
                 bcrypt.genSalt(10, (err, salt) => {
                     console.log(err)
                     bcrypt.hash(password, salt, (err, hash) => {
-                        const newUser = new User({ email, hash })
+                        const newUser = new User({ email: email, password: hash })
 
-                        // Save User
                         newUser
                             .save()
                                 .then(user => { 
@@ -42,6 +41,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
                     if (err) throw err
 
                     if (isMatch) { 
+                        console.log('Contrasena correcta')
                         return done(null, user) 
                     } else {
                         return done(null, false, { message: "Wrong email or password" })
