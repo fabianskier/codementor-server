@@ -15,13 +15,12 @@ passport.deserializeUser((id, done) => {
 })
 
 // Local Strategy
-passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
-    await User.findOne({ email: email })
+passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+    User.findOne({ email: email })
         .then(user => {
             // Create new User
             if (!user) {
                 bcrypt.genSalt(10, (err, salt) => {
-                    console.log(err)
                     bcrypt.hash(password, salt, (err, hash) => {
                         const newUser = new User({ email: email, password: hash })
 
@@ -41,7 +40,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, async (email, passwor
                     if (err) throw err
 
                     if (isMatch) { 
-                        console.log('Contrasena correcta')
                         return done(null, user) 
                     } else {
                         return done(null, false, { message: "Wrong email or password" })
